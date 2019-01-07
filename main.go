@@ -3,7 +3,8 @@ package main
 import (
 	"log"
 	"net/http"
-	"github.com/gorilla/mux" 
+	"github.com/gorilla/mux"
+	"encoding/json" 
 )
 
 type Movie struct {
@@ -17,6 +18,9 @@ var movies []Movie
 
 func main() {
 	router:= mux.NewRouter()
+
+	movies = append(movies, Movie{Id: 1, Title: "avatar", Genre: "action", Year: "2009"})
+
 	router.HandleFunc("/movies", getMovies).Methods("GET")
 	router.HandleFunc("/movies/{id}", getMovie).Methods("GET")
 	router.HandleFunc("/movies", addMovie).Methods("POST")
@@ -27,7 +31,7 @@ func main() {
 }
 
 func getMovies(w http.ResponseWriter, r *http.Request) {
-	log.Println("get all movies")
+	json.NewEncoder(w).Encode(movies)
 }
 
 func getMovie(w http.ResponseWriter, r *http.Request) {
