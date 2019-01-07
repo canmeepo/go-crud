@@ -60,9 +60,30 @@ func addMovie(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateMovie(w http.ResponseWriter, r *http.Request) {
-	log.Println("update movie")
+	var movie Movie
+
+	json.NewDecoder(r.Body).Decode(&movie)
+
+	for i, item := range movies {
+		if item.Id == movie.Id {
+			movies[i] = movie
+		}
+	}
+
+	json.NewEncoder(w).Encode(&movie)
 }
 
 func removeMovie(w http.ResponseWriter, r *http.Request) {
-	log.Println("remove movie")
+	params := mux.Vars(r)
+
+	id, _ := strconv.Atoi(params["id"])
+
+	for i, item := range movies {
+		if item.Id == id {
+			movies = append(movies[:i], movies[i+1:]...)
+		}
+	}
+
+	json.NewEncoder(w).Encode(movies)
+
 }
