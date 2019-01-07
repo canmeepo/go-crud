@@ -50,7 +50,13 @@ func getMovie(w http.ResponseWriter, r *http.Request) {
 }
 
 func addMovie(w http.ResponseWriter, r *http.Request) {
-	log.Println("add movie")
+	var movie Movie
+
+	json.NewDecoder(r.Body).Decode(&movie)
+
+	movies = append(movies, movie)
+
+	json.NewEncoder(w).Encode(movies)
 }
 
 func updateMovie(w http.ResponseWriter, r *http.Request) {
